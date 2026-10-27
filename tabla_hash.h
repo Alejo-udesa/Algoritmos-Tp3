@@ -15,7 +15,7 @@
 //   - V: se puede copiar.
 //
 // Invariante de representacion:
-//   COMPLETAR: escriban aca el invariante de la representacion que elijan.
+//   COMPLETAR: escriban aca el invariante de la representacion que elijan.     a revisar
 //
 // Complejidades: n es la cantidad de claves guardadas y c la capacidad.
 // "Promedio" supone que la funcion de hash reparte las claves de manera
@@ -26,6 +26,19 @@ class TablaHash {
     // COMPLETAR: la representacion la eligen ustedes (que guardan, y que hay
     // en cada bucket). Pueden agregar tambien funciones auxiliares privadas.
     // Lo que el Iterador necesite de aca tiene que estar declarado antes que el.
+
+    struct Nodo {
+        K clave;
+        V valor;
+        Nodo* siguiente;
+        Nodo(const K& k, const V& v, Nodo* sig = nullptr)
+            : clave(k), valor(v), siguiente(sig) {}
+    };
+
+    std::vector<Nodo*> _tabla
+    size_t _cantidad;
+    size_t _capacidad;
+
 
   public:
     static const size_t FACTOR_DE_CARGA_MAXIMO = 2;
@@ -160,8 +173,7 @@ V* TablaHash<K, V>::buscar(const K& clave) {
 
 template <typename K, typename V>
 size_t TablaHash<K, V>::cantidad() {
-    // COMPLETAR
-    return 0;
+    return this->cantidad;
 }
 
 template <typename K, typename V>
@@ -172,7 +184,7 @@ size_t TablaHash<K, V>::capacidad() {
 
 template <typename K, typename V>
 size_t TablaHash<K, V>::colisiones() {
-    // COMPLETAR
+    
     return 0;
 }
 
