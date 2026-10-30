@@ -72,7 +72,7 @@ class Diccionario {
         // Costo: O(1).
         bool hay_mas() {
             // COMPLETAR
-            return false;
+            return de_la_tabla.hay_mas();
         }
 
         // Pre:  hay_mas().
@@ -116,6 +116,16 @@ Diccionario<K, V>::Diccionario() : tabla(CAPACIDAD_INICIAL) {
 template <typename K, typename V>
 void Diccionario<K, V>::insertar(const K& clave, const V& valor) {
     // COMPLETAR
+    size_t indice = static_cast<size_t>(funcion_hash(clave) % tabla.capacidad());
+    typename TablaHash<K, V>::Nodo* actual = tabla[indice];
+    while (actual!=nullptr) {
+        if (actual->clave == clave) {
+            actual->valor = valor;
+            return;
+        }
+    }
+    tabla.insertar(clave, valor);
+
 }
 
 template <typename K, typename V>
@@ -127,7 +137,7 @@ bool Diccionario<K, V>::pertenece(const K& clave) {
 template <typename K, typename V>
 V Diccionario<K, V>::obtener(const K& clave) {
     // COMPLETAR
-    return V();
+    return (tabla.buscar(clave))*;
 }
 
 template <typename K, typename V>
@@ -138,7 +148,7 @@ void Diccionario<K, V>::eliminar(const K& clave) {
 template <typename K, typename V>
 size_t Diccionario<K, V>::cantidad() {
     // COMPLETAR
-    return 0;
+    return tabla.cantidad();
 }
 
 // El "typename" le avisa al compilador que Diccionario<K, V>::Iterador es un
