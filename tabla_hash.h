@@ -5,6 +5,8 @@
 
 #include "funcion_hash.h"
 
+#include <vector>
+
 // TAD TablaHash<K, V>: tabla de hash con direccionamiento cerrado.
 //
 // Guarda pares <clave, valor> repartidos en buckets: el par de una clave esta
@@ -35,10 +37,10 @@ class TablaHash {
             : clave(k), valor(v), siguiente(sig) {}
     };
 
-    std::vector<Nodo*> _tabla
+    std::vector<Nodo*> _tabla;
     size_t _cantidad;
     size_t _capacidad;
-
+    //void redimensionar(size_t nueva_capacidad); a revisar HABRIA Q AGREGAR ESTA FUNCION PARA CDO LOS BUCKETS SE LLENAN
 
   public:
     static const size_t FACTOR_DE_CARGA_MAXIMO = 2;
@@ -96,6 +98,9 @@ class TablaHash {
       private:
         // COMPLETAR: la representacion la eligen ustedes. Desde aca se puede
         // usar la parte privada de la tabla.
+        TablaHash* _origen;
+        size_t _bucket;
+        Nodo* _actual;
 
         // Para que crear_iterador() pueda armar el iterador.
         friend class TablaHash;
@@ -106,6 +111,9 @@ class TablaHash {
         // Costo: O(1).
         bool hay_mas() {
             // COMPLETAR
+            if (_actual != nullptr){
+                return true;
+            }
             return false;
         }
 
@@ -114,7 +122,7 @@ class TablaHash {
         // Costo: O(1).
         K clave() {
             // COMPLETAR (reemplazar la linea de abajo)
-            return K();
+            return _actual->clave;
         }
 
         // Pre:  hay_mas().
@@ -122,7 +130,7 @@ class TablaHash {
         // Costo: O(1).
         V valor() {
             // COMPLETAR (reemplazar la linea de abajo)
-            return V();
+            return _actual->valor;
         }
 
         // Pre:  hay_mas().
@@ -131,6 +139,8 @@ class TablaHash {
         //        iterador y avanzar hasta el final) cuesta O(n + c).
         void avanzar() {
             // COMPLETAR
+            _actual = _actual->siguiente;
+            this->saltar_buckets_vacios();
         }
     };
 
@@ -148,7 +158,12 @@ class TablaHash {
 template <typename K, typename V>
 TablaHash<K, V>::TablaHash(size_t capacidad_inicial) {
     // COMPLETAR
+    _capacidad = capacidad_inicial;
+    _cantidad = 0;
+    _tabla = std::vector<typename TablaHash<K, V>::Nodo*>(capacidad_inicial, nullptr);
 }
+
+// a revisar HABRIA QUE IMPLEMENTAR UNA FUNCION REDIMENSIONAR PARA CDO SE LLENAN LOS BUCKETS PERO NO SE XQ NO ESTA EN LA ESTRUCTURA
 
 template <typename K, typename V>
 TablaHash<K, V>::~TablaHash() {
@@ -158,6 +173,13 @@ TablaHash<K, V>::~TablaHash() {
 template <typename K, typename V>
 void TablaHash<K, V>::insertar(const K& clave, const V& valor) {
     // COMPLETAR
+    //if (_cantidad +1 > FACTOR_DE_CARGA_MAXIMO * _capacidad){
+    //this->redimensionar(_capacidad*2);
+    //}
+    size_t indice = funcion_hash(clave) % _capacidad;
+    typename TablaHash<K, V>::Nodo* nuevo = new typename TablaHash<K, V>::Nodo(clave, valor, _tabla[indice]);
+    _tabla[indice] = nuevo;
+    _cantidad++;
 }
 
 template <typename K, typename V>
@@ -168,6 +190,14 @@ void TablaHash<K, V>::eliminar(const K& clave) {
 template <typename K, typename V>
 V* TablaHash<K, V>::buscar(const K& clave) {
     // COMPLETAR
+    size_t indice = funcion_hash(clave) % _capacidad;
+    typename TablaHash<K, V>::Nodo* actual = _tabla[indice];
+    while (actual != nullptr) {
+        if (actual->clave == clave) {
+            return &(actual->valor);
+        }
+        actual = actual->siguiente;
+    }
     return nullptr;
 }
 
@@ -179,7 +209,7 @@ size_t TablaHash<K, V>::cantidad() {
 template <typename K, typename V>
 size_t TablaHash<K, V>::capacidad() {
     // COMPLETAR
-    return 0;
+    return _capacidad;
 }
 
 template <typename K, typename V>
@@ -193,6 +223,10 @@ template <typename K, typename V>
 typename TablaHash<K, V>::Iterador TablaHash<K, V>::crear_iterador() {
     Iterador it;
     // COMPLETAR
+    it._origen = this;
+    it._bucket = 0;
+    it._actual = _tabla[0];
+    it.saltar_buckets_vacios();
     return it;
 }
 
