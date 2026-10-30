@@ -6,7 +6,7 @@ size_t funcion_hash(const std::string& clave) {
     for (int i = 0; i < clave.size(); i++) {
         k = ((k << 5) + k) + clave[i];
     }
-    return k % clave.size();
+    return k;
 }
 
 size_t funcion_hash(int clave) {
@@ -17,6 +17,5 @@ size_t funcion_hash(int clave) {
         int cifra = (int)cifra_temp  ;       // a revisar el uso del casteo, capaz conviene static_cast
         k = ((k << 5) + k) + clave;
     }
-    return k % clave;
-    return 0;
+    return k;
 }

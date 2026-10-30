@@ -102,6 +102,13 @@ class TablaHash {
         size_t _bucket;
         Nodo* _actual;
 
+        void saltar_buckets_vacios() {
+            while (_actual == nullptr && _bucket + 1 < _origen->_capacidad) {
+                _bucket++;
+                _actual = _origen->_tabla[_bucket];
+            }
+        }
+
         // Para que crear_iterador() pueda armar el iterador.
         friend class TablaHash;
 
@@ -168,6 +175,14 @@ TablaHash<K, V>::TablaHash(size_t capacidad_inicial) {
 template <typename K, typename V>
 TablaHash<K, V>::~TablaHash() {
     // COMPLETAR
+    for(typename TablaHash<K, V>::Nodo* actual : _tabla) {
+        while(actual!=nullptr) {
+            typename TablaHash<K, V>::Nodo* siguiente = actual->siguiente;
+            delete actual;
+            actual = siguiente;
+        }
+    }
+
 }
 
 template <typename K, typename V>
@@ -185,6 +200,26 @@ void TablaHash<K, V>::insertar(const K& clave, const V& valor) {
 template <typename K, typename V>
 void TablaHash<K, V>::eliminar(const K& clave) {
     // COMPLETAR
+    size_t indice = funcion_hash(clave) % _capacidad;
+    typename TablaHash<K, V>::Nodo* actual = _tabla[indice];
+    typename TablaHash<K, V>::Nodo* anterior = nullptr;
+
+    while (actual != nullptr) {
+        if (actual->clave == clave) {
+            if (anterior == nullptr) {
+                _tabla[indice] = actual->siguiente;
+            } else {
+                anterior->siguiente = actual->siguiente;
+            }
+            delete actual;
+            _cantidad--;
+            return;
+        }
+        anterior = actual;
+        actual = actual->siguiente;
+        
+    }
+    return;
 }
 
 template <typename K, typename V>
@@ -203,7 +238,7 @@ V* TablaHash<K, V>::buscar(const K& clave) {
 
 template <typename K, typename V>
 size_t TablaHash<K, V>::cantidad() {
-    return this->cantidad;
+    return _cantidad;
 }
 
 template <typename K, typename V>
@@ -213,9 +248,15 @@ size_t TablaHash<K, V>::capacidad() {
 }
 
 template <typename K, typename V>
-size_t TablaHash<K, V>::colisiones() {
-    
-    return 0;
+size_t TablaHash<K, V>::colisiones() 
+{
+    int buckets_con_elementos = 0;
+    for (int i = 0; i<_capacidad; i++) {
+        if (_tabla[i]!=nullptr) {
+            buckets_con_elementos++;
+        }
+    }
+    return cantidad() - buckets_con_elementos;
 }
 
 // El "typename" le avisa al compilador que TablaHash<K, V>::Iterador es un tipo.
