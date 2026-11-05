@@ -40,7 +40,7 @@ class TablaHash {
     std::vector<Nodo*> _tabla;
     size_t _cantidad;
     size_t _capacidad;
-    //void redimensionar(size_t nueva_capacidad); a revisar HABRIA Q AGREGAR ESTA FUNCION PARA CDO LOS BUCKETS SE LLENAN
+    void redimensionar(size_t nueva_capacidad);
 
   public:
     static const size_t FACTOR_DE_CARGA_MAXIMO = 2;
@@ -171,6 +171,25 @@ TablaHash<K, V>::TablaHash(size_t capacidad_inicial) {
 }
 
 // a revisar HABRIA QUE IMPLEMENTAR UNA FUNCION REDIMENSIONAR PARA CDO SE LLENAN LOS BUCKETS PERO NO SE XQ NO ESTA EN LA ESTRUCTURA
+template <typename K, typename V>
+void TablaHash<K, V>::redimensionar(size_t nueva_capacidad) {
+    std::vector<Nodo*> nueva_tabla(nueva_capacidad, nullptr);
+    for (size_t i = 0; i < _capacidad; i++) {
+        typename TablaHash<K, V>::Nodo* actual = _tabla[i];
+        while(actual!=nullptr) {
+            typename TablaHash<K, V>::Nodo* siguiente = actual -> siguiente;
+            size_t nuevo_indice = funcion_hash(actual->clave) % nueva_capacidad;
+
+            //insetra al principio de cada bucket cada nodo, por si hay colision.
+            actual->siguiente = nueva_tabla[nuevo_indice];
+            nueva_tabla[nuevo_indice] = actual;
+
+            actual = siguiente;
+        }
+    }
+    _tabla.swap(nueva_capacidad);
+    _capacidad = nueva_capacidad;
+}
 
 template <typename K, typename V>
 TablaHash<K, V>::~TablaHash() {
@@ -191,8 +210,12 @@ void TablaHash<K, V>::insertar(const K& clave, const V& valor) {
     //if (_cantidad +1 > FACTOR_DE_CARGA_MAXIMO * _capacidad){
     //this->redimensionar(_capacidad*2);
     //}
+    if (_cantidad + 1 > FACTOR_DE_CARGA_MAXIMO * _capacidad) {
+        redimensionar(_capacidad * 2);
+    }
     size_t indice = funcion_hash(clave) % _capacidad;
     typename TablaHash<K, V>::Nodo* nuevo = new typename TablaHash<K, V>::Nodo(clave, valor, _tabla[indice]);
+
     _tabla[indice] = nuevo;
     _cantidad++;
 }
