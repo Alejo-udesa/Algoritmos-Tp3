@@ -79,7 +79,6 @@ class Diccionario {
         // Post: devuelve la clave actual, sin modificar el iterador.
         // Costo: O(1).
         K clave() {
-             (reemplazar la linea de abajo)
             return de_la_tabla.clave();
         }
 
@@ -88,7 +87,6 @@ class Diccionario {
         //       el iterador.
         // Costo: O(1).
         V valor() {
-             (reemplazar la linea de abajo)
             return de_la_tabla.valor();
         }
 
@@ -153,7 +151,8 @@ size_t Diccionario<K, V>::cantidad() {
 // tipo.
 template <typename K, typename V>
 typename Diccionario<K, V>::Iterador Diccionario<K, V>::crear_iterador() {
-    Iterador it = tabla.crear_iterador();
+    Iterador it;
+    it.de_la_tabla = tabla.crear_iterador();
     return it;
 }
 

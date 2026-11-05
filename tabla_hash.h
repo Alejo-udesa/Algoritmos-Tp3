@@ -187,7 +187,7 @@ void TablaHash<K, V>::redimensionar(size_t nueva_capacidad) {
             actual = siguiente;
         }
     }
-    _tabla.swap(nueva_capacidad);
+    _tabla.swap(nueva_tabla);
     _capacidad = nueva_capacidad;
 }
 
