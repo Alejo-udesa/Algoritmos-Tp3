@@ -80,7 +80,7 @@ class Diccionario {
         // Costo: O(1).
         K clave() {
             // COMPLETAR (reemplazar la linea de abajo)
-            return K();
+            return de_la_tabla.clave();
         }
 
         // Pre:  hay_mas().
@@ -89,7 +89,7 @@ class Diccionario {
         // Costo: O(1).
         V valor() {
             // COMPLETAR (reemplazar la linea de abajo)
-            return V();
+            return de_la_tabla.valor();
         }
 
         // Pre:  hay_mas().
@@ -97,7 +97,7 @@ class Diccionario {
         // Costo: O(c) en peor caso. Recorrer el diccionario entero cuesta
         //        O(n + c).
         void avanzar() {
-            // COMPLETAR
+            de_la_tabla.avanzar();
         }
     };
 
@@ -156,7 +156,7 @@ size_t Diccionario<K, V>::cantidad() {
 template <typename K, typename V>
 typename Diccionario<K, V>::Iterador Diccionario<K, V>::crear_iterador() {
     Iterador it;
-    // COMPLETAR
+    
     return it;
 }
 
