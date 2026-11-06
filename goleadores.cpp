@@ -92,7 +92,7 @@ size_t Goleadores::cantidad_de_jugadores() {
 
 std::string Goleadores::maximo_goleador() {
     // COMPLETAR
-    return goles_por_jugador(maximo);
+    return maximo;
 }
 
 void Goleadores::imprimir_por_nombre() {

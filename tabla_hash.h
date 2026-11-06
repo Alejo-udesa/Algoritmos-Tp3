@@ -274,7 +274,7 @@ template <typename K, typename V>
 size_t TablaHash<K, V>::colisiones() 
 {
     int buckets_con_elementos = 0;
-    for (int i = 0; i<_capacidad; i++) {
+    for (size_t i = 0; i<_capacidad; i++) {
         if (_tabla[i]!=nullptr) {
             buckets_con_elementos++;
         }
