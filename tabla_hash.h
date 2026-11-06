@@ -17,7 +17,12 @@
 //   - V: se puede copiar.
 //
 // Invariante de representacion:
-//   COMPLETAR: escriban aca el invariante de la representacion que elijan.     a revisar
+//   - _capacidad >= 1.
+//   - _tabla tiene exactamente _capacidad buckets.
+//   - Cada Nodo de _tabla[i] tiene funcion_hash(nodo->clave) % _capacidad == i.
+//   - Ninguna clave aparece en dos nodos distintos.
+//   - _cantidad es la cantidad total de nodos en _tabla.
+//   - _cantidad <= FACTOR_DE_CARGA_MAXIMO * _capacidad.
 //
 // Complejidades: n es la cantidad de claves guardadas y c la capacidad.
 // "Promedio" supone que la funcion de hash reparte las claves de manera
@@ -93,7 +98,10 @@ class TablaHash {
     // Deja de ser valido si se inserta o se elimina en la tabla.
     //
     // Invariante de representacion:
-    //   COMPLETAR: escriban aca el invariante de la representacion que elijan.
+    //   - _origen apunta a la tabla que se recorre.
+    //   - _bucket es el indice del bucket donde esta _actual (0 <= _bucket < _origen->_capacidad).
+    //   - _actual es el nodo actual dentro de _tabla[_bucket], o nullptr si no hay mas.
+    
     class Iterador {
       private:
         // COMPLETAR: la representacion la eligen ustedes. Desde aca se puede
